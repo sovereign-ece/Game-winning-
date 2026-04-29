@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECE Eternal Clicker</title>
+    <style>
+        body { background: #121212; color: gold; text-align: center; font-family: sans-serif; overflow: hidden; }
+        #coin { width: 200px; cursor: pointer; transition: transform 0.1s; margin-top: 50px; }
+        #coin:active { transform: scale(0.9); }
+        .stats { font-size: 24px; margin: 20px; }
+        .ad-box { background: #222; padding: 15px; margin: 20px auto; width: 80%; border-radius: 10px; border: 1px dashed gold; font-size: 12px; }
+        .btn-withdraw { background: gold; color: black; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>Efikcoin Eternal Miner</h1>
+    <div class="stats">Balance: <span id="balance">0</span> ECE</div>
+
+    <img id="coin" src="https://via.placeholder.com/200/FFD700/000000?text=ECE" onclick="mine()">
+
+    <div class="ad-box">
+        <p>Watch Ad to 2x Mining Speed</p>
+        <button onclick="showAd()">WATCH VIDEO</button>
+    </div>
+
+    <button class="btn-withdraw" onclick="withdraw()">WITHDRAW TO WALLET</button>
+
+    <script>
+        let score = localStorage.getItem('ece_balance') || 0;
+        document.getElementById('balance').innerText = score;
+
+        function mine() {
+            score++;
+            document.getElementById('balance').innerText = score;
+            localStorage.setItem('ece_balance', score);
+            // Add a "haptic" vibration for mobile users
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+
+        function showAd() {
+            alert("Integrating Ad Network... (Connect your AdMob or Unity Ads ID here)");
+            // Once the ad finishes, you give the user a bonus
+        }
+
+        function withdraw() {
+            window.location.href = "https://efikcoin-eternal-blockchain.github.io/ECE-Wallet/";
+        }
+    </script>
+</body>
+</html>
