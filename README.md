@@ -28,7 +28,7 @@ The system is built on four core pillars to ensure productivity and revenue gene
 ## 🚀 Deployment Instructions
 To ensure the system "hears your cry" and remains productive:
 1.  **Clone** this repository to your local environment.
-2.  **Verify** that `index.html` contains the authorized `blockId: "51675"`.
+2.  **Verify** that `index.html` contains the authorized `blockId: "29193"`.
 3.  **Deploy** to GitHub Pages to activate the live Mini App.
 4.  **Connect** via BotFather to the `/start` command of @Ececoinbot.
 
