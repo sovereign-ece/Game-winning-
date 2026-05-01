@@ -11,7 +11,7 @@ This repository contains the core logic for the **Ececoinbot** mining engine. By
 * **Official Bot:** [@Ececoinbot](https://t.me/Ececoinbot)
 * **Web App URL:** [sovereign-ece.github.io/Game-winning-/](https://sovereign-ece.github.io/Game-winning-/)
 * **Monetization Engine:** Adsgram SDK
-* **Verified BlockID:** `51675`
+* **Verified BlockID:** `29193`
 
 ---
 
