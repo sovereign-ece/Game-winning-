@@ -3,130 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Efikcoin Eternal | Sovereign Finance</title>
+    <title>Efikcoin Eternal | Mainnet</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
     <style>
-        :root { --gold: #D4AF37; --bg-black: #000; --light-gold: #FFD700; }
-        body { background: var(--bg-black); color: white; font-family: 'Times New Roman', Times, serif; text-align: center; margin: 0; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        :root { --gold: #D4AF37; --bg: #000; }
+        body { background: var(--bg); color: white; font-family: 'serif'; text-align: center; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
         
-        /* The Professional Golden Headers */
-        h1 { font-size: 2rem; text-transform: uppercase; letter-spacing: 3px; background: linear-gradient(to right, #fff, var(--light-gold), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        h2 { font-size: 1rem; color: #fff; font-weight: normal; letter-spacing: 1px; margin-top: 5px; margin-bottom: 25px; }
+        h1 { font-size: 1.6rem; color: var(--gold); margin: 0; letter-spacing: 2px; }
+        p.sub { font-size: 0.8rem; margin: 5px 0 20px 0; opacity: 0.8; }
 
-        /* The Four Quadrants */
-        .grid-container { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: 1fr 1fr; gap: 15px; width: 95%; max-width: 500px; align-items: center; }
+        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 400px; position: relative; }
         
-        .grid-item { display: flex; align-items: center; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border: 1px solid rgba(212, 175, 55, 0.1); }
-        .grid-item i { font-size: 2rem; color: var(--gold); margin-right: 15px; }
-        .text-group { text-align: left; }
-        .title { color: var(--gold); text-transform: uppercase; font-weight: bold; font-size: 0.9rem; letter-spacing: 1px; }
-        .subtitle { color: #fff; font-size: 0.8rem; }
+        /* The Central Gold Coin */
+        .coin-btn { grid-column: 1 / 3; grid-row: 1 / 3; width: 140px; height: 140px; margin: 0 auto; z-index: 10; cursor: pointer; transition: 0.2s; border: none; background: none; outline: none; }
+        .coin-btn img { width: 100%; height: 100%; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6)); }
+        .coin-btn:active { transform: scale(0.9); }
 
-        /* The Central Central Coin (Central Column) */
-        .central-col { grid-column: 2; grid-row: 1 / 3; width: 140px; display: flex; flex-direction: column; align-items: center; }
-        .coin-link { position: relative; display: block; width: 100%; aspect-ratio: 1; text-decoration: none; border-radius: 50%; box-shadow: 0 0 40px rgba(212, 175, 55, 0.3); }
-        .coin-img { width: 100%; height: auto; display: block; }
-        .coin-glow { position: absolute; top: -10%; left: -10%; width: 120%; height: 120%; background: radial-gradient(circle, var(--light-gold) 0%, transparent 70%); opacity: 0.15; animation: pulse 2s infinite; z-index: -1; }
-        
-        @keyframes pulse { 0% { opacity: 0.15; } 50% { opacity: 0.3; } 100% { opacity: 0.15; } }
+        /* Feature Cards */
+        .feature { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 10px; padding: 10px; font-size: 0.7rem; font-weight: bold; color: var(--gold); display: flex; flex-direction: column; align-items: center; }
+        .feature span { color: white; margin-top: 4px; font-size: 0.6rem; }
 
-        /* Active Balance Display */
-        .balance-box { margin-top: 25px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; color: #aaa; }
-        #balanceDisplay { font-size: 2.2rem; color: var(--light-gold); font-weight: bold; font-family: monospace; }
+        .bal-container { margin-top: 30px; }
+        .bal-label { font-size: 0.7rem; letter-spacing: 1px; color: #888; }
+        #balance { font-size: 2.5rem; font-weight: bold; color: #FFD700; }
         
-        /* The Log Area for Feedback */
-        .log { margin-top: 20px; font-size: 0.7rem; color: cyan; background: rgba(0,0,0,0.5); padding: 8px; border-radius: 5px; width: 80%; }
+        #status { margin-top: 15px; font-size: 0.7rem; color: #00f2ff; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; }
     </style>
 </head>
 <body>
 
     <h1>EFIKCOIN ETERNAL</h1>
-    <h2>Sovereign Finance Ecosystem</h2>
+    <p class="sub">Sovereign Finance Ecosystem</p>
 
-    <div class="grid-container">
+    <div class="app-grid">
+        <div class="feature">⚙️ TAP TO<span>MINE</span></div>
+        <div class="feature">👛 SECURE<span>WALLET</span></div>
         
-        <div class="grid-item" style="grid-column: 1; grid-row: 1;">
-            <i>⚙️</i>
-            <div class="text-group">
-                <div class="title">TAP TO MINE</div>
-            </div>
-        </div>
+        <button class="coin-btn" id="mintAction">
+            <img src="https://cdn-icons-png.flaticon.com/512/2585/2585244.png" alt="ECE Coin">
+        </button>
 
-        <div class="grid-item" style="grid-column: 1; grid-row: 2;">
-            <i>📺</i>
-            <div class="text-group">
-                <div class="title">WATCH ADS & EARN</div>
-            </div>
-        </div>
-
-        <div class="grid-item" style="grid-column: 3; grid-row: 1;">
-            <i>👛</i>
-            <div class="text-group">
-                <div class="title">SECURE WALLET</div>
-            </div>
-        </div>
-
-        <div class="grid-item" style="grid-column: 3; grid-row: 2;">
-            <i>🛡️</i>
-            <div class="text-group">
-                <div class="title">SECURE WALLET</div>
-            </div>
-        </div>
-
-        <div class="central-col">
-            <a href="#" class="coin-link" id="mintBtn">
-                <img src="https://i.imgur.com/your-coin-image.png" alt="ECE Coin" class="coin-img">
-                <div class="coin-glow"></div>
-            </div>
-        </div>
+        <div class="feature">📺 WATCH<span>ADS & EARN</span></div>
+        <div class="feature">🛡️ SECURE<span>WALLET</span></div>
     </div>
 
-    <div class="balance-box">
-        Current $ECE Balance
-        <div id="balanceDisplay">0.00</div>
+    <div class="bal-container">
+        <div class="bal-label">CURRENT $ECE BALANCE</div>
+        <div id="balance">0.00</div>
     </div>
 
-    <div class="log" id="statusLog">ENGINE READY. TAP CENTRAL COIN TO MINT.</div>
+    <div id="status">ENGINE READY. TAP COIN TO MINT.</div>
 
     <script>
-        // 1. Initialize Telegram
         const tg = window.Telegram.WebApp;
-        tg.ready();
         tg.expand();
-
-        // 2. Initialize Adsgram with your specific block ID
+        
         const AdController = window.Adsgram.init({ blockId: "29226" });
+        let bal = parseFloat(localStorage.getItem('ece_bal')) || 0;
+        document.getElementById('balance').innerText = bal.toLocaleString();
 
-        // 3. Load Persistent Local Balance
-        let balance = parseFloat(localStorage.getItem('ece_vault')) || 0;
-        document.getElementById('balanceDisplay').innerText = balance.toLocaleString();
-
-        // 4. The Functional Core: Click Central Coin
-        document.getElementById('mintBtn').addEventListener('click', () => {
-            const statusLog = document.getElementById('statusLog');
-            statusLog.innerText = "CONNECTING TO MINING CLOUD... WATCH AD TO MINT BLOCK.";
-            statusLog.style.color = "cyan";
-
+        document.getElementById('mintAction').onclick = () => {
+            const log = document.getElementById('status');
+            log.innerText = "OPENING SECURE MINT CHANNEL...";
+            
             AdController.show().then((result) => {
-                // SUCCESS: User completed the ad
-                balance += 500;
-                localStorage.setItem('ece_vault', balance);
-                
-                // Update UI
-                document.getElementById('balanceDisplay').innerText = balance.toLocaleString();
-                statusLog.innerText = "BLOCK VERIFIED: +500 $ECE ADDED TO SECURE WALLET";
-                statusLog.style.color = "#00ff00";
-                
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
+                bal += 500;
+                localStorage.setItem('ece_bal', bal);
+                document.getElementById('balance').innerText = bal.toLocaleString();
+                log.innerText = "SUCCESS: +500 $ECE MINTED!";
+                log.style.color = "#00ff00";
+                tg.HapticFeedback.notificationOccurred('success');
             }).catch((err) => {
-                // Error or Skip
-                statusLog.innerText = "ERROR: " + (err.description || "AD INTERRUPTED");
-                statusLog.style.color = "#ff4444";
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                log.innerText = "ERROR: " + (err.description || "Ad skipped");
+                log.style.color = "#ff4444";
+                tg.HapticFeedback.notificationOccurred('error');
             });
-        });
+        };
     </script>
 </body>
 </html>
