@@ -3,63 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Efikcoin Eternal Mainnet</title>
+    <title>Efikcoin Eternal | Mainnet v1.0</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
     <style>
-        :root { --gold: #FFD700; --neon: #00f2ff; }
-        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
-        .stats { border: 1px solid var(--neon); padding: 10px; margin-bottom: 20px; width: 80%; font-size: 0.8rem; background: rgba(0,242,255,0.05); }
-        .balance { font-size: 2.5rem; color: var(--gold); text-shadow: 0 0 10px var(--gold); margin: 10px 0; }
-        .mining-btn { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #333, #000); border: 4px solid var(--gold); color: var(--gold); font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(255,215,0,0.2); transition: 0.2s; position: relative; overflow: hidden; }
-        .mining-btn:active { transform: scale(0.9); }
-        .mining-btn::after { content: "⛏️"; font-size: 3rem; display: block; margin-bottom: 10px; }
-        .log { margin-top: 20px; font-size: 0.7rem; color: #666; height: 40px; }
+        :root { --gold: #FFD700; --neon: #00f2ff; --bg: #050505; }
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        
+        /* Mining Dashboard */
+        .dashboard { width: 90%; max-width: 400px; padding: 20px; border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 20px; background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(10px); text-align: center; }
+        .hash-rate { font-family: monospace; color: var(--neon); font-size: 0.8rem; margin-bottom: 10px; }
+        .balance-container { margin: 20px 0; }
+        .balance-title { font-size: 0.7rem; letter-spacing: 3px; color: #888; }
+        .balance-value { font-size: 3rem; font-weight: bold; color: var(--gold); text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+        
+        /* The Mining Core Button */
+        .core-container { position: relative; width: 180px; height: 180px; margin: 20px auto; }
+        .mining-core { width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle, #222, #000); border: 4px solid var(--gold); color: var(--gold); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.3s; z-index: 2; position: relative; }
+        .mining-core:active { transform: scale(0.95); }
+        .mining-core i { font-size: 2.5rem; margin-bottom: 10px; }
+        .pulse { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background: var(--gold); opacity: 0.2; animation: pulse-animation 2s infinite; z-index: 1; }
+        
+        @keyframes pulse-animation { 0% { transform: scale(1); opacity: 0.2; } 100% { transform: scale(1.5); opacity: 0; } }
+        
+        .status-bar { margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 10px; font-size: 0.8rem; border: 1px solid #333; }
+        #log { color: var(--neon); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="stats">
-        ENGINE: ACTIVE | HASHRATE: <span id="hashrate">0</span> KH/s<br>
-        NETWORK: EFIKCOIN MAINNET 1.0
+    <div class="dashboard">
+        <div class="hash-rate">CORE_STATUS: <span style="color:#0f0">ONLINE</span> | HASHRATE: <span id="hr">142.12</span> KH/s</div>
+        
+        <div class="balance-container">
+            <div class="balance-title">TOTAL ECE MINTED</div>
+            <div class="balance-value" id="balanceDisplay">0.00</div>
+        </div>
+
+        <div class="core-container">
+            <div class="pulse"></div>
+            <button class="mining-core" id="mintAction">
+                <span style="font-size: 2.5rem;">⛏️</span>
+                <span style="font-size: 0.9rem;">TAP TO MINT</span>
+            </button>
+        </div>
+
+        <div class="status-bar">
+            SYSTEM LOG: <span id="log">AWAITING INPUT...</span>
+        </div>
     </div>
 
-    <div class="balance" id="displayBalance">0.00</div>
-    <div style="font-size: 0.7rem; letter-spacing: 2px;">TOTAL $ECE MINTED</div>
-
-    <button class="mining-btn" id="mineAction">MINT NOW</button>
-
-    <div class="log" id="sysLog">SYSTEM READY... STANDBY FOR INSTRUCTION</div>
-
     <script>
-        // 1. Initialize Telegram & Adsgram
+        // 1. Initialize Telegram
         const tg = window.Telegram.WebApp;
+        tg.ready();
         tg.expand();
+
+        // 2. Initialize Adsgram with your PRODUCTIVE block
         const AdController = window.Adsgram.init({ blockId: "29226" });
 
-        let eceBalance = parseFloat(localStorage.getItem('ece_vault')) || 0;
-        document.getElementById('displayBalance').innerText = eceBalance.toLocaleString();
+        // 3. Load Local Progress
+        let currentBalance = parseFloat(localStorage.getItem('ece_vault_v1')) || 0;
+        document.getElementById('balanceDisplay').innerText = currentBalance.toLocaleString();
 
-        // 2. Mock Engine (The "Value Creation" Feel)
+        // 4. Hashrate Animation (Visual Value Creation)
         setInterval(() => {
-            document.getElementById('hashrate').innerText = (Math.random() * (150 - 120) + 120).toFixed(2);
-        }, 1000);
+            const hr = (Math.random() * (160 - 130) + 130).toFixed(2);
+            document.getElementById('hr').innerText = hr;
+        }, 1500);
 
-        // 3. The Productive Action
-        document.getElementById('mineAction').addEventListener('click', () => {
-            document.getElementById('sysLog').innerText = "CONNECTING TO ADSGRAM CLOUD...";
-            
-            // Trigger Ad
+        // 5. The Production Function
+        document.getElementById('mintAction').addEventListener('click', async () => {
+            const log = document.getElementById('log');
+            log.innerText = "OPENING MINTING CHANNEL...";
+            log.style.color = "var(--neon)";
+
+            // Trigger the Ad (This creates the USDT revenue for you)
             AdController.show().then((result) => {
-                // SUCCESSFUL MINT
-                eceBalance += 500;
-                localStorage.setItem('ece_vault', eceBalance);
-                document.getElementById('displayBalance').innerText = eceBalance.toLocaleString();
-                document.getElementById('sysLog').innerText = "BLOCK VERIFIED: +500 $ECE ADDED TO VAULT";
-                tg.HapticFeedback.notificationOccurred('success');
+                // User watched the whole ad
+                currentBalance += 500;
+                localStorage.setItem('ece_vault_v1', currentBalance);
+                
+                // Update UI
+                document.getElementById('balanceDisplay').innerText = currentBalance.toLocaleString();
+                log.innerText = "BLOCK VERIFIED: +500 $ECE MINTED!";
+                log.style.color = "#0f0";
+                
+                // Haptic feedback (Vibration)
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
             }).catch((err) => {
-                document.getElementById('sysLog').innerText = "ERROR: " + (err.description || "AD INTERRUPTED");
-                tg.HapticFeedback.notificationOccurred('error');
+                // Error or Skip
+                log.innerText = "CORE ERROR: " + (err.description || "AD SKIPPED");
+                log.style.color = "#ff4444";
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
             });
         });
     </script>
