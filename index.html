@@ -3,168 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Efikcoin Eternal | Sovereign Mining</title>
+    <title>Efikcoin Eternal | Pro Miner</title>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
     <style>
-        :root {
-            --gold: #FFD700;
-            --dark-gold: #B8860B;
-            --black: #0a0a0a;
-            --glass: rgba(255, 215, 0, 0.1);
-        }
-
-        body {
-            background-color: var(--black);
-            color: white;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-        }
-
-        .container {
-            text-align: center;
-            padding: 30px;
-            border-radius: 20px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            width: 85%;
-            max-width: 400px;
-        }
-
-        .logo-area {
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-            margin: 10px 0;
-            background: linear-gradient(to right, var(--gold), #fff, var(--gold));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-        }
-
-        .subtitle {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-        }
-
-        /* The Animated Aura */
-        .aura {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 30px;
-            background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        .aura-inner {
-            font-size: 3rem;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(255, 215, 0, 0.7); }
-            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--gold), var(--dark-gold));
-            color: black;
-            border: none;
-            padding: 18px 35px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            border-radius: 50px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            text-transform: uppercase;
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .status-box {
-            margin-top: 25px;
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        #statusText { color: var(--gold); font-weight: bold; }
+        :root { --gold: #FFD700; --black: #0a0a0a; }
+        body { background: var(--black); color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: rgba(255,215,0,0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.2); text-align: center; width: 90%; max-width: 350px; }
+        .balance-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 20px 0; border: 1px dashed var(--gold); }
+        .balance-label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; }
+        .balance-amount { font-size: 2rem; font-weight: bold; color: var(--gold); }
+        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        #status { margin-top: 15px; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="logo-area">
-            <div class="aura"><span class="aura-inner">📀</span></div>
-            <h1>EFIKCOIN ETERNAL</h1>
-            <div class="subtitle">Global Sovereign Financial Engine</div>
-        </div>
-
-        <button class="btn" id="mintBtn">⚡ MINT 500 $ECE</button>
-
-        <div class="status-box">
-            System Status: <span id="statusText">OPERATIONAL</span>
-        </div>
+<div class="card">
+    <h2>EFIKCOIN ETERNAL</h2>
+    
+    <div class="balance-box">
+        <div class="balance-label">Your ECE Balance</div>
+        <div class="balance-amount" id="userBalance">0.00</div>
     </div>
 
-    <script>
-        // USING YOUR NEW PRODUCTIVE BLOCK ID
-        const AdController = window.Adsgram.init({ blockId: "29226" });
-        const btn = document.getElementById('mintBtn');
-        const status = document.getElementById('statusText');
+    <button class="btn" id="mintBtn">⚡ MINT +500 $ECE</button>
+    <div id="status">System: <span style="color:var(--gold)">READY</span></div>
+</div>
 
-        btn.addEventListener('click', () => {
-            btn.innerText = "OPENING SECURE LINK...";
-            status.innerText = "CONNECTING TO MAINNET...";
+<script>
+    // 1. Load existing balance from the phone's memory
+    let balance = parseFloat(localStorage.getItem('ece_balance')) || 0;
+    document.getElementById('userBalance').innerText = balance.toLocaleString();
+
+    const AdController = window.Adsgram.init({ blockId: "29226" });
+
+    document.getElementById('mintBtn').addEventListener('click', () => {
+        document.getElementById('status').innerText = "Connecting to Ad Server...";
+        
+        AdController.show().then((result) => {
+            // SUCCESS: This is where the "Productivity" happens
+            balance += 500;
+            localStorage.setItem('ece_balance', balance); // Save to phone
+            document.getElementById('userBalance').innerText = balance.toLocaleString();
             
-            AdController.show().then((result) => {
-                // User finished the video
-                btn.innerText = "MINT SUCCESSFUL!";
-                status.innerText = "+500 $ECE ADDED TO WALLET";
-                status.style.color = "#00ff00";
-                
-                // Reset button after 3 seconds
-                setTimeout(() => {
-                    btn.innerText = "⚡ MINT 500 $ECE";
-                    status.innerText = "OPERATIONAL";
-                    status.style.color = "gold";
-                }, 3000);
-
-            }).catch((result) => {
-                // User skipped or error
-                btn.innerText = "MINT FAILED";
-                status.innerText = result.description || "Ad skipped - No reward";
-                status.style.color = "#ff4444";
-                
-                setTimeout(() => {
-                    btn.innerText = "⚡ MINT 500 $ECE";
-                    status.innerText = "OPERATIONAL";
-                }, 3000);
-            });
+            document.getElementById('status').innerHTML = "<span style='color:#00ff00'>MINT SUCCESSFUL (+500)</span>";
+        }).catch((err) => {
+            document.getElementById('status').innerHTML = "<span style='color:#ff4444'>FAILED: " + err.description + "</span>";
         });
-    </script>
+    });
+</script>
+
 </body>
 </html>
