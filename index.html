@@ -4,59 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Efikcoin Eternal Mining</title>
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
     <style>
-        body { background: #000; color: #FFD700; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 0; display: flex; flex-direction: column; height: 100vh; justify-content: center; overflow: hidden; }
-        #balance-container { font-size: 28px; margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 10px #FFD700; }
-        #mining-btn { width: 220px; height: 220px; border-radius: 50%; border: 5px solid #FFD700; background: radial-gradient(circle, #222, #000); cursor: pointer; margin: 0 auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px #FFD700; transition: transform 0.1s; }
-        #mining-btn:active { transform: scale(0.9); }
-        #ad-btn { margin-top: 40px; padding: 15px 30px; background: #FFD700; color: #000; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; font-size: 18px; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4); }
-        .coin-icon { font-size: 80px; }
-        p { color: #aaa; font-size: 14px; margin-top: 20px; }
+        body { font-family: sans-serif; background: #000; color: gold; text-align: center; padding: 20px; }
+        .btn { background: gold; color: black; padding: 15px 30px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1.2rem; }
+        .status { margin-top: 20px; font-size: 0.9rem; color: #fff; }
     </style>
 </head>
 <body>
 
-    <div id="balance-container">$ECE: <span id="balance">0</span></div>
-
-    <div id="mining-btn" onclick="mine()">
-        <div class="coin-icon">♾️</div>
-    </div>
-
-    <button id="ad-btn" onclick="watchAd()">Watch Ad (+500 ECE)</button>
+    <h1>Efikcoin Eternal</h1>
+    <p>Mine $ECE by watching rewarded ads</p>
     
-    <p>Founder: Sovereign ECE | Official Ecosystem</p>
+    <button class="btn" id="watchAdBtn">WATCH AD & MINT 500 ECE</button>
+
+    <div class="status" id="statusMsg">Ready to mint...</div>
 
     <script>
-        // --- 2. Initialize the System with your ID ---
+        // Initialize Adsgram with your NEW Active Block ID
         const AdController = window.Adsgram.init({ blockId: "29226" });
 
-        // --- 3. Game Logic (Mining) ---
-        let balance = parseInt(localStorage.getItem('ece_balance')) || 0;
-        document.getElementById('balance').innerText = balance;
+        const btn = document.getElementById('watchAdBtn');
+        const status = document.getElementById('statusMsg');
 
-        function mine() {
-            balance += 1;
-            updateBalance();
-        }
-
-        // --- 4. The Revenue Logic (Ads) ---
-        function watchAd() {
+        btn.addEventListener('click', () => {
+            status.innerText = "Loading ad...";
+            
             AdController.show().then((result) => {
-                // User watched the whole ad
-                balance += 500;
-                updateBalance();
-                alert("Legacy Bonus: 500 ECE added to your account!");
-            }).catch((error) => {
-                // Ad failed or was skipped
-                alert("System busy. Please try again in a moment.");
+                // SUCCESS: User watched the whole ad
+                status.innerText = "Success! 500 ECE Minted.";
+                status.style.color = "lightgreen";
+                
+                // This triggers your Reward URL logic
+                console.log("Ad completed. Reward verified.");
+            }).catch((result) => {
+                // ERROR or SKIP
+                status.innerText = "Error: " + result.description;
+                status.style.color = "red";
+                console.error("Ad Error:", result);
             });
-        }
-
-        function updateBalance() {
-            document.getElementById('balance').innerText = balance;
-            localStorage.setItem('ece_balance', balance);
-        }
+        });
     </script>
 </body>
 </html>
