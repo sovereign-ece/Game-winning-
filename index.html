@@ -3,55 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Efikcoin Eternal | Pro Miner</title>
+    <title>Efikcoin Eternal Mainnet</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
     <style>
-        :root { --gold: #FFD700; --black: #0a0a0a; }
-        body { background: var(--black); color: white; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { background: rgba(255,215,0,0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.2); text-align: center; width: 90%; max-width: 350px; }
-        .balance-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 20px 0; border: 1px dashed var(--gold); }
-        .balance-label { font-size: 0.8rem; color: #aaa; text-transform: uppercase; }
-        .balance-amount { font-size: 2rem; font-weight: bold; color: var(--gold); }
-        .btn { background: var(--gold); color: black; border: none; padding: 15px; border-radius: 50px; width: 100%; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #status { margin-top: 15px; font-size: 0.8rem; }
+        :root { --gold: #FFD700; --neon: #00f2ff; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .stats { border: 1px solid var(--neon); padding: 10px; margin-bottom: 20px; width: 80%; font-size: 0.8rem; background: rgba(0,242,255,0.05); }
+        .balance { font-size: 2.5rem; color: var(--gold); text-shadow: 0 0 10px var(--gold); margin: 10px 0; }
+        .mining-btn { width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #333, #000); border: 4px solid var(--gold); color: var(--gold); font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(255,215,0,0.2); transition: 0.2s; position: relative; overflow: hidden; }
+        .mining-btn:active { transform: scale(0.9); }
+        .mining-btn::after { content: "⛏️"; font-size: 3rem; display: block; margin-bottom: 10px; }
+        .log { margin-top: 20px; font-size: 0.7rem; color: #666; height: 40px; }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>EFIKCOIN ETERNAL</h2>
-    
-    <div class="balance-box">
-        <div class="balance-label">Your ECE Balance</div>
-        <div class="balance-amount" id="userBalance">0.00</div>
+    <div class="stats">
+        ENGINE: ACTIVE | HASHRATE: <span id="hashrate">0</span> KH/s<br>
+        NETWORK: EFIKCOIN MAINNET 1.0
     </div>
 
-    <button class="btn" id="mintBtn">⚡ MINT +500 $ECE</button>
-    <div id="status">System: <span style="color:var(--gold)">READY</span></div>
-</div>
+    <div class="balance" id="displayBalance">0.00</div>
+    <div style="font-size: 0.7rem; letter-spacing: 2px;">TOTAL $ECE MINTED</div>
 
-<script>
-    // 1. Load existing balance from the phone's memory
-    let balance = parseFloat(localStorage.getItem('ece_balance')) || 0;
-    document.getElementById('userBalance').innerText = balance.toLocaleString();
+    <button class="mining-btn" id="mineAction">MINT NOW</button>
 
-    const AdController = window.Adsgram.init({ blockId: "29226" });
+    <div class="log" id="sysLog">SYSTEM READY... STANDBY FOR INSTRUCTION</div>
 
-    document.getElementById('mintBtn').addEventListener('click', () => {
-        document.getElementById('status').innerText = "Connecting to Ad Server...";
-        
-        AdController.show().then((result) => {
-            // SUCCESS: This is where the "Productivity" happens
-            balance += 500;
-            localStorage.setItem('ece_balance', balance); // Save to phone
-            document.getElementById('userBalance').innerText = balance.toLocaleString();
+    <script>
+        // 1. Initialize Telegram & Adsgram
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        const AdController = window.Adsgram.init({ blockId: "29226" });
+
+        let eceBalance = parseFloat(localStorage.getItem('ece_vault')) || 0;
+        document.getElementById('displayBalance').innerText = eceBalance.toLocaleString();
+
+        // 2. Mock Engine (The "Value Creation" Feel)
+        setInterval(() => {
+            document.getElementById('hashrate').innerText = (Math.random() * (150 - 120) + 120).toFixed(2);
+        }, 1000);
+
+        // 3. The Productive Action
+        document.getElementById('mineAction').addEventListener('click', () => {
+            document.getElementById('sysLog').innerText = "CONNECTING TO ADSGRAM CLOUD...";
             
-            document.getElementById('status').innerHTML = "<span style='color:#00ff00'>MINT SUCCESSFUL (+500)</span>";
-        }).catch((err) => {
-            document.getElementById('status').innerHTML = "<span style='color:#ff4444'>FAILED: " + err.description + "</span>";
+            // Trigger Ad
+            AdController.show().then((result) => {
+                // SUCCESSFUL MINT
+                eceBalance += 500;
+                localStorage.setItem('ece_vault', eceBalance);
+                document.getElementById('displayBalance').innerText = eceBalance.toLocaleString();
+                document.getElementById('sysLog').innerText = "BLOCK VERIFIED: +500 $ECE ADDED TO VAULT";
+                tg.HapticFeedback.notificationOccurred('success');
+            }).catch((err) => {
+                document.getElementById('sysLog').innerText = "ERROR: " + (err.description || "AD INTERRUPTED");
+                tg.HapticFeedback.notificationOccurred('error');
+            });
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
