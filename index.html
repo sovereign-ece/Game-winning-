@@ -3,45 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Efikcoin Eternal Mining</title>
+    <title>Efikcoin Eternal | Sovereign Mining</title>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
     <style>
-        body { font-family: sans-serif; background: #000; color: gold; text-align: center; padding: 20px; }
-        .btn { background: gold; color: black; padding: 15px 30px; border-radius: 10px; font-weight: bold; cursor: pointer; border: none; font-size: 1.2rem; }
-        .status { margin-top: 20px; font-size: 0.9rem; color: #fff; }
+        :root {
+            --gold: #FFD700;
+            --dark-gold: #B8860B;
+            --black: #0a0a0a;
+            --glass: rgba(255, 215, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--black);
+            color: white;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+        }
+
+        .container {
+            text-align: center;
+            padding: 30px;
+            border-radius: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            width: 85%;
+            max-width: 400px;
+        }
+
+        .logo-area {
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            margin: 10px 0;
+            background: linear-gradient(to right, var(--gold), #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+
+        /* The Animated Aura */
+        .aura {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .aura-inner {
+            font-size: 3rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(255, 215, 0, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold), var(--dark-gold));
+            color: black;
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .status-box {
+            margin-top: 25px;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        #statusText { color: var(--gold); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>Efikcoin Eternal</h1>
-    <p>Mine $ECE by watching rewarded ads</p>
-    
-    <button class="btn" id="watchAdBtn">WATCH AD & MINT 500 ECE</button>
+    <div class="container">
+        <div class="logo-area">
+            <div class="aura"><span class="aura-inner">📀</span></div>
+            <h1>EFIKCOIN ETERNAL</h1>
+            <div class="subtitle">Global Sovereign Financial Engine</div>
+        </div>
 
-    <div class="status" id="statusMsg">Ready to mint...</div>
+        <button class="btn" id="mintBtn">⚡ MINT 500 $ECE</button>
+
+        <div class="status-box">
+            System Status: <span id="statusText">OPERATIONAL</span>
+        </div>
+    </div>
 
     <script>
-        // Initialize Adsgram with your NEW Active Block ID
+        // USING YOUR NEW PRODUCTIVE BLOCK ID
         const AdController = window.Adsgram.init({ blockId: "29226" });
-
-        const btn = document.getElementById('watchAdBtn');
-        const status = document.getElementById('statusMsg');
+        const btn = document.getElementById('mintBtn');
+        const status = document.getElementById('statusText');
 
         btn.addEventListener('click', () => {
-            status.innerText = "Loading ad...";
+            btn.innerText = "OPENING SECURE LINK...";
+            status.innerText = "CONNECTING TO MAINNET...";
             
             AdController.show().then((result) => {
-                // SUCCESS: User watched the whole ad
-                status.innerText = "Success! 500 ECE Minted.";
-                status.style.color = "lightgreen";
+                // User finished the video
+                btn.innerText = "MINT SUCCESSFUL!";
+                status.innerText = "+500 $ECE ADDED TO WALLET";
+                status.style.color = "#00ff00";
                 
-                // This triggers your Reward URL logic
-                console.log("Ad completed. Reward verified.");
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    btn.innerText = "⚡ MINT 500 $ECE";
+                    status.innerText = "OPERATIONAL";
+                    status.style.color = "gold";
+                }, 3000);
+
             }).catch((result) => {
-                // ERROR or SKIP
-                status.innerText = "Error: " + result.description;
-                status.style.color = "red";
-                console.error("Ad Error:", result);
+                // User skipped or error
+                btn.innerText = "MINT FAILED";
+                status.innerText = result.description || "Ad skipped - No reward";
+                status.style.color = "#ff4444";
+                
+                setTimeout(() => {
+                    btn.innerText = "⚡ MINT 500 $ECE";
+                    status.innerText = "OPERATIONAL";
+                }, 3000);
             });
         });
     </script>
