@@ -7,148 +7,34 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
     <script src="https://unpkg.com/@web3modal/standalone@3.5.7/dist/standalone.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.0/dist/ethers.umd.min.js"></script>
     <style>
         :root { --gold: #D4AF37; --bg: #000; --green: #00ff00; --red: #ff4444; }
-        body { 
-            background: var(--bg); 
-            color: white; 
-            font-family: 'serif'; 
-            text-align: center; 
-            margin: 0; 
-            padding: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: flex-start; 
-            min-height: 100vh; 
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-        
+        body { background: var(--bg); color: white; font-family: 'serif'; text-align: center; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; overflow-x: hidden; overflow-y: auto; }
         h1 { font-size: 1.6rem; color: var(--gold); margin: 10px 0 0 0; letter-spacing: 2px; }
         p.sub { font-size: 0.8rem; margin: 5px 0 15px 0; opacity: 0.8; }
-
-        .app-grid { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
-            width: 90%; 
-            max-width: 400px; 
-            position: relative; 
-            margin-bottom: 15px;
-        }
-        
-        .coin-btn { 
-            grid-column: 1 / 3; 
-            grid-row: 1 / 3; 
-            width: 140px; 
-            height: 140px; 
-            margin: 0 auto; 
-            z-index: 10; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            border: none; 
-            background: none; 
-            outline: none; 
-            position: relative;
-        }
+        .app-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 400px; position: relative; margin-bottom: 15px; }
+        .coin-btn { grid-column: 1 / 3; grid-row: 1 / 3; width: 140px; height: 140px; margin: 0 auto; z-index: 10; cursor: pointer; transition: 0.2s; border: none; background: none; outline: none; position: relative; }
         .coin-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-        .coin-btn img { 
-            width: 100%; 
-            height: 100%; 
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6)); 
-        }
+        .coin-btn img { width: 100%; height: 100%; filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.6)); }
         .coin-btn:active:not(:disabled) { transform: scale(0.9); }
-
-        .cooldown-overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--gold);
-        }
-
-        .feature { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(212, 175, 55, 0.2); 
-            border-radius: 10px; 
-            padding: 10px; 
-            font-size: 0.7rem; 
-            font-weight: bold; 
-            color: var(--gold); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            cursor: pointer;
-            transition: 0.2s;
-        }
+        .cooldown-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold; color: var(--gold); }
+        .feature { background: rgba(255,255,255,0.05); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 10px; padding: 10px; font-size: 0.7rem; font-weight: bold; color: var(--gold); display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
         .feature:active { transform: scale(0.95); }
         .feature span { color: white; margin-top: 4px; font-size: 0.6rem; }
-
         .bal-container { margin: 15px 0; }
         .bal-label { font-size: 0.7rem; letter-spacing: 1px; color: #888; }
         #balance { font-size: 2.5rem; font-weight: bold; color: #FFD700; }
-        
-        #status { 
-            margin: 10px 0; 
-            font-size: 0.7rem; 
-            color: #00f2ff; 
-            background: rgba(0,0,0,0.5); 
-            padding: 5px 15px; 
-            border-radius: 20px; 
-            min-height: 20px;
-        }
-
-        .wallet-section {
-            width: 90%;
-            max-width: 400px;
-            margin: 10px 0;
-        }
-        #walletBtn {
-            background: linear-gradient(135deg, #D4AF37, #FFD700);
-            color: #000;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 0.8rem;
-            width: 100%;
-            cursor: pointer;
-        }
-        #walletBtn.connected {
-            background: rgba(0,255,0,0.2);
-            border: 1px solid var(--green);
-            color: var(--green);
-        }
-
-        .leaderboard {
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0 30px 0;
-        }
-        .leaderboard h3 {
-            color: var(--gold);
-            font-size: 0.9rem;
-            margin: 0 0 10px 0;
-            letter-spacing: 1px;
-        }
-        .leaderboard-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.75rem;
-        }
+        #usdValue { font-size: 0.9rem; color: #00ff00; margin-top: 5px; }
+        #status { margin: 10px 0; font-size: 0.7rem; color: #00f2ff; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; min-height: 20px; }
+        .wallet-section { width: 90%; max-width: 400px; margin: 10px 0; }
+        #walletBtn, #withdrawBtn { background: linear-gradient(135deg, #D4AF37, #FFD700); color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 0.8rem; width: 100%; cursor: pointer; margin: 5px 0; }
+        #walletBtn.connected { background: rgba(0,255,0,0.2); border: 1px solid var(--green); color: var(--green); }
+        #withdrawBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .token-info { font-size: 0.6rem; opacity: 0.5; margin-top: 8px; word-break: break-all; }
+        .leaderboard { width: 90%; max-width: 400px; background: rgba(255,255,255,0.03); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 10px; padding: 15px; margin: 15px 0 30px 0; }
+        .leaderboard h3 { color: var(--gold); font-size: 0.9rem; margin: 0 0 10px 0; letter-spacing: 1px; }
+        .leaderboard-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; }
         .leaderboard-row:last-child { border-bottom: none; }
         .rank { color: var(--gold); font-weight: bold; }
     </style>
@@ -156,7 +42,7 @@
 <body>
 
     <h1>EFIKCOIN ETERNAL</h1>
-    <p class="sub">Sovereign Finance Ecosystem</p>
+    <p class="sub">Sovereign Finance Ecosystem | Mainnet</p>
 
     <div class="app-grid">
         <div class="feature" id="mineFeature">⚙️ TAP TO<span>MINE</span></div>
@@ -172,12 +58,15 @@
     </div>
 
     <div class="bal-container">
-        <div class="bal-label">CURRENT $ECE BALANCE</div>
+        <div class="bal-label">YOUR $ECE BALANCE</div>
         <div id="balance">0.00</div>
+        <div id="usdValue">≈ $0.00 USD</div>
     </div>
 
     <div class="wallet-section">
         <button id="walletBtn">CONNECT WALLET</button>
+        <button id="withdrawBtn" disabled>WITHDRAW TO WALLET</button>
+        <div class="token-info">LP: 0x7FAbe1cc407f0e01c3cdF5Cc05744f8D98bC70B6</div>
     </div>
 
     <div id="status">ENGINE READY. TAP COIN TO MINT.</div>
@@ -191,46 +80,60 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         
-        // 1. CONFIG - REPLACE THESE
+        // === YOUR REAL PRODUCTION CONFIG ===
         const ADSGRAM_BLOCK_ID = "29226";
-        const WALLETCONNECT_PROJECT_ID = "dd82ebe727bf8bffca60f9d85a2541e4"; // Get from cloud.walletconnect.com
-        const COOLDOWN_SECONDS = 60; // 1 minute cooldown between mints
-        const MINT_REWARD = 500;
+        const WALLETCONNECT_PROJECT_ID = "dd82ebe727bf8bffca60f9d85a2541e4";
+        const ECE_TOKEN_ADDRESS = "0x9F8C29E496ECB6C39c221458f211234DfCB233E0";
+        const LP_PAIR_ADDRESS = "0x7FAbe1cc407f0e01c3cdF5Cc05744f8D98bC70B6";
+        const WBNB_ADDRESS = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+        const BSC_CHAIN_ID = 56;
+        const BSC_RPC = "https://bsc-dataseed.binance.org/";
         
-        // 2. INIT
+        const COOLDOWN_SECONDS = 45;
+        const MINT_REWARD = 100;
+        const MIN_WITHDRAW = 10000;
+        let ECE_USD_PRICE = 0.001;
+        
+        // === CONTRACT ABIs ===
+        const PAIR_ABI = [
+            "function getReserves() view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)",
+            "function token0() view returns (address)",
+            "function token1() view returns (address)"
+        ];
+        const ERC20_ABI = ["function decimals() view returns (uint8)"];
+
+        // === INIT ===
         const AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
         const web3Modal = window.Web3ModalStandalone.Web3ModalStandalone;
         const modal = web3Modal.create({
-            projectId: WALLETCONNECT_PROJECT_ID"dd82ebe727bf8bffca60f9d85a2541e4",
-            standaloneChains: ["eip155:1"] // Ethereum Mainnet
+            projectId: WALLETCONNECT_PROJECT_ID,
+            standaloneChains: [`eip155:${BSC_CHAIN_ID}`]
         });
 
-        // 3. STATE
+        // === STATE ===
         let bal = parseFloat(localStorage.getItem('ece_bal')) || 0;
+        let totalAdsWatched = parseInt(localStorage.getItem('ece_ads')) || 0;
         let lastMintTime = parseInt(localStorage.getItem('ece_lastMint')) || 0;
         let walletAddress = localStorage.getItem('ece_wallet') || null;
-        let leaderboard = JSON.parse(localStorage.getItem('ece_leaderboard')) || [
-            { name: "KingEfik", bal: 124500 },
-            { name: "CalabarWhale", bal: 98200 },
-            { name: "UyoMiner", bal: 76100 },
-            { name: "You", bal: 0 }
-        ];
+        let provider = null;
+        let userId = tg.initDataUnsafe?.user?.id || 'guest_' + Math.random().toString(36).substr(2, 9);
 
-        // 4. UI ELEMENTS
+        // === UI ELEMENTS ===
         const balEl = document.getElementById('balance');
+        const usdEl = document.getElementById('usdValue');
         const statusEl = document.getElementById('status');
         const mintBtn = document.getElementById('mintAction');
         const cooldownOverlay = document.getElementById('cooldownOverlay');
         const walletBtn = document.getElementById('walletBtn');
+        const withdrawBtn = document.getElementById('withdrawBtn');
 
-        // 5. FUNCTIONS
+        // === CORE FUNCTIONS ===
         function updateBalance() {
             balEl.innerText = bal.toLocaleString();
-            leaderboard.find(u => u.name === "You").bal = bal;
-            leaderboard.sort((a,b) => b.bal - a.bal);
+            usdEl.innerText = `≈ $${(bal * ECE_USD_PRICE).toFixed(2)} USD`;
             localStorage.setItem('ece_bal', bal);
-            localStorage.setItem('ece_leaderboard', JSON.stringify(leaderboard));
-            renderLeaderboard();
+            withdrawBtn.disabled = bal < MIN_WITHDRAW || !walletAddress;
+            updateLeaderboard();
         }
 
         function updateStatus(msg, color = "#00f2ff") {
@@ -252,7 +155,28 @@
             }
         }
 
-        function renderLeaderboard() {
+        function updateWalletUI() {
+            if (walletAddress) {
+                walletBtn.innerText = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
+                walletBtn.classList.add('connected');
+            } else {
+                walletBtn.innerText = 'CONNECT WALLET';
+                walletBtn.classList.remove('connected');
+            }
+            withdrawBtn.disabled = bal < MIN_WITHDRAW || !walletAddress;
+        }
+
+        function updateLeaderboard() {
+            let leaderboard = JSON.parse(localStorage.getItem('ece_leaderboard_global')) || [];
+            const userIndex = leaderboard.findIndex(u => u.id === userId);
+            const userData = { id: userId, name: tg.initDataUnsafe?.user?.first_name || "You", bal: bal };
+            
+            if (userIndex >= 0) leaderboard[userIndex] = userData;
+            else leaderboard.push(userData);
+            
+            leaderboard.sort((a,b) => b.bal - a.bal);
+            localStorage.setItem('ece_leaderboard_global', JSON.stringify(leaderboard.slice(0, 10)));
+            
             const list = document.getElementById('leaderboardList');
             list.innerHTML = leaderboard.slice(0, 5).map((u, i) => `
                 <div class="leaderboard-row">
@@ -262,26 +186,64 @@
             `).join('');
         }
 
-        function updateWalletUI() {
-            if (walletAddress) {
-                walletBtn.innerText = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
-                walletBtn.classList.add('connected');
-            } else {
-                walletBtn.innerText = 'CONNECT WALLET';
-                walletBtn.classList.remove('connected');
+        async function fetchTokenPrice() {
+            try {
+                updateStatus("FETCHING LIVE PRICE FROM LP...");
+                const provider = new ethers.JsonRpcProvider(BSC_RPC);
+                const pair = new ethers.Contract(LP_PAIR_ADDRESS, PAIR_ABI, provider);
+                
+                const [reserve0, reserve1] = await pair.getReserves();
+                const token0 = await pair.token0();
+                
+                const eceToken = new ethers.Contract(ECE_TOKEN_ADDRESS, ERC20_ABI, provider);
+                const wbnbToken = new ethers.Contract(WBNB_ADDRESS, ERC20_ABI, provider);
+                const eceDecimals = await eceToken.decimals();
+                const wbnbDecimals = await wbnbToken.decimals();
+                
+                let eceReserve, bnbReserve;
+                if (token0.toLowerCase() === ECE_TOKEN_ADDRESS.toLowerCase()) {
+                    eceReserve = reserve0;
+                    bnbReserve = reserve1;
+                } else {
+                    eceReserve = reserve1;
+                    bnbReserve = reserve0;
+                }
+                
+                const ecePriceInBNB = (Number(bnbReserve) / 10**Number(wbnbDecimals)) / (Number(eceReserve) / 10**Number(eceDecimals));
+                
+                const bnbPriceRes = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT');
+                const bnbData = await bnbPriceRes.json();
+                const bnbUsdPrice = parseFloat(bnbData.price);
+                
+                ECE_USD_PRICE = ecePriceInBNB * bnbUsdPrice;
+                updateBalance();
+                updateStatus(`LIVE: $ECE = $${ECE_USD_PRICE.toFixed(6)} USD`, "#00ff00");
+                
+            } catch(e) { 
+                console.log("Price fetch failed:", e);
+                updateStatus("PRICE FEED OFFLINE - USING CACHED", "#ffaa00");
             }
         }
 
-        // 6. EVENT LISTENERS
+        // === MONETIZATION LOGIC ===
         mintBtn.onclick = () => {
+            if (!walletAddress) {
+                updateStatus("CONNECT WALLET TO MINE", "#ff4444");
+                tg.HapticFeedback.notificationOccurred('error');
+                return;
+            }
+            
             updateStatus("OPENING SECURE MINT CHANNEL...");
             
             AdController.show().then((result) => {
                 bal += MINT_REWARD;
+                totalAdsWatched++;
                 lastMintTime = Date.now();
                 localStorage.setItem('ece_lastMint', lastMintTime);
+                localStorage.setItem('ece_ads', totalAdsWatched);
+                
                 updateBalance();
-                updateStatus(`SUCCESS: +${MINT_REWARD} $ECE MINTED!`, "#00ff00");
+                updateStatus(`SUCCESS: +${MINT_REWARD} $ECE | Total Ads: ${totalAdsWatched}`, "#00ff00");
                 tg.HapticFeedback.notificationOccurred('success');
                 checkCooldown();
             }).catch((err) => {
@@ -292,18 +254,21 @@
 
         walletBtn.onclick = async () => {
             if (walletAddress) {
-                // Disconnect
                 walletAddress = null;
+                provider = null;
                 localStorage.removeItem('ece_wallet');
                 updateWalletUI();
                 updateStatus("WALLET DISCONNECTED", "#ff4444");
             } else {
                 try {
-                    const address = await modal.connect();
-                    walletAddress = address;
+                    updateStatus("CONNECTING TO BSC WALLET...");
+                    const session = await modal.connect();
+                    provider = new ethers.BrowserProvider(session);
+                    const signer = await provider.getSigner();
+                    walletAddress = await signer.getAddress();
                     localStorage.setItem('ece_wallet', walletAddress);
                     updateWalletUI();
-                    updateStatus("WALLET CONNECTED", "#00ff00");
+                    updateStatus("WALLET CONNECTED TO BSC", "#00ff00");
                     tg.HapticFeedback.notificationOccurred('success');
                 } catch (e) {
                     updateStatus("CONNECTION CANCELLED", "#ff4444");
@@ -311,18 +276,30 @@
             }
         };
 
-        // Feature buttons just scroll to sections for now
+        withdrawBtn.onclick = async () => {
+            if (bal < MIN_WITHDRAW) {
+                updateStatus(`MINIMUM ${MIN_WITHDRAW.toLocaleString()} ECE TO WITHDRAW`, "#ff4444");
+                return;
+            }
+            updateStatus("WITHDRAWALS: Opening Telegram @EfikcoinSupport");
+            tg.openTelegramLink("https://t.me/EfikcoinSupport");
+            tg.HapticFeedback.notificationOccurred('warning');
+        };
+
         document.getElementById('leaderboardFeature').onclick = () => {
             document.getElementById('leaderboard').scrollIntoView({ behavior: 'smooth' });
         };
-        document.getElementById('walletFeature').onclick = () => {
-            walletBtn.click();
-        };
+        document.getElementById('walletFeature').onclick = () => walletBtn.click();
+        document.getElementById('mineFeature').onclick = () => mintBtn.click();
+        document.getElementById('adsFeature').onclick = () => mintBtn.click();
 
-        // 7. INIT RUN
+        // === INIT ===
+        fetchTokenPrice();
+        setInterval(fetchTokenPrice, 30000);
         updateBalance();
         updateWalletUI();
         checkCooldown();
+        updateLeaderboard();
         tg.ready();
     </script>
 </body>
