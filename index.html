@@ -3,85 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EFIKCOIN ETERNAL | LIVE MINTING</title>
+    <title>EFIKCOIN REWARDS | WATCH & EARN</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: #fff; font-family: 'Orbitron', sans-serif; text-align: center; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        .logo { color: #d4af37; font-size: 1.4rem; font-weight: 900; letter-spacing: 3px; margin-bottom: 5px; }
-        .sub-logo { font-size: 0.6rem; color: #555; letter-spacing: 5px; margin-bottom: 30px; }
+        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .reward-box { background: #111; border: 2px solid #d4af37; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+        .balance-label { font-size: 0.8rem; color: #888; letter-spacing: 2px; }
+        #balance { font-size: 3.5rem; color: #d4af37; font-weight: bold; margin: 10px 0; }
         
-        /* THE VAULT STATS */
-        #balance { font-size: 3.5rem; color: #d4af37; font-weight: 900; text-shadow: 0 0 20px rgba(212,175,55,0.4); margin: 10px 0; }
-        .label { font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px; }
-
-        /* THE CLICKABLE COIN */
-        .coin-trigger { background: none; border: none; cursor: pointer; transition: transform 0.1s; margin: 30px 0; position: relative; }
-        .coin-trigger:active { transform: scale(0.9); }
-        .coin-trigger img { width: 220px; height: 220px; filter: drop-shadow(0 0 30px rgba(212,175,55,0.3)); }
-        
-        /* STATUS LOG */
-        .status-bar { background: rgba(20,20,20,0.9); border: 1px solid #d4af3733; padding: 12px; border-radius: 12px; width: 90%; max-width: 400px; font-size: 0.7rem; color: #00f2ff; font-family: monospace; }
-        
-        .pulse { animation: pulse-glow 2s infinite; }
-        @keyframes pulse-glow { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        /* THE REAL WATCH BUTTON */
+        .watch-btn { 
+            background: linear-gradient(135deg, #d4af37, #b8960c); 
+            color: #000; border: none; padding: 20px 40px; 
+            font-size: 1.2rem; font-weight: bold; border-radius: 50px; 
+            cursor: pointer; width: 100%; margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(212,175,55,0.4);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .watch-btn:active { transform: scale(0.95); }
+        .status { margin-top: 20px; font-size: 0.7rem; color: #00f2ff; min-height: 20px; }
     </style>
 </head>
 <body>
 
-    <div class="logo">EFIKCOIN ETERNAL</div>
-    <div class="sub-logo">SOVEREIGN ECOSYSTEM</div>
+    <div class="reward-box">
+        <h2 style="margin-top:0; color:#d4af37;">Efikcoin Eternal</h2>
+        <div class="balance-label">EARNED REWARDS</div>
+        <div id="balance">0.00</div>
+        
+        <button class="watch-btn" id="watchVideoBtn">
+            <span>📺</span> WATCH VIDEO TO EARN
+        </button>
 
-    <div id="balance">0.00</div>
-    <div class="label">TOTAL $ECE IN VAULT</div>
-
-    <button class="coin-trigger" id="mintBtn">
-        <img src="https://cdn-icons-png.flaticon.com/512/2585/2585244.png" alt="ECE COIN">
-    </button>
-
-    <div class="status-bar" id="log">SYSTEM: READY TO MINT...</div>
-    <p style="font-size: 0.6rem; margin-top: 15px; opacity: 0.4;">MINTING AUTHENTICATED BY ADSGRAM BLOCK 29505</p>
+        <div class="status" id="statusText">READY TO LOAD VIDEO...</div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
+        tg.ready();
         tg.expand();
 
-        // 1. INITIALIZE ADSGRAM WITH YOUR NEW BLOCK ID
+        // BLOCK ID 29505
         const AdController = window.Adsgram.init({ blockId: "29505" });
 
-        // 2. PERSISTENCE LAYER (Saves rewards to phone)
-        let currentEce = parseFloat(localStorage.getItem('ece_live_vault')) || 0;
-        document.getElementById('balance').innerText = currentEce.toLocaleString(undefined, {minimumFractionDigits: 2});
+        let currentPoints = parseFloat(localStorage.getItem('ece_points')) || 0;
+        document.getElementById('balance').innerText = currentPoints.toFixed(2);
 
-        // 3. MINING LOGIC
-        document.getElementById('mintBtn').onclick = () => {
-            const log = document.getElementById('log');
-            log.innerText = "OPENING SECURE MINTING CHANNEL...";
-            log.style.color = "#00f2ff";
+        document.getElementById('watchVideoBtn').onclick = () => {
+            const status = document.getElementById('statusText');
+            status.innerText = "LOADING VIDEO... PLEASE WAIT";
+            status.style.color = "#00f2ff";
 
-            // Trigger the Rewarded Video
+            // CALLING THE REAL ADSGRAM VIDEO
             AdController.show().then((result) => {
-                // WINNING REWARD
-                const reward = 500.00;
-                currentEce += reward;
+                // SUCCESS: User watched the whole video
+                currentPoints += 500;
+                localStorage.setItem('ece_points', currentPoints);
+                document.getElementById('balance').innerText = currentPoints.toFixed(2);
                 
-                // Save and Update UI
-                localStorage.setItem('ece_live_vault', currentEce);
-                document.getElementById('balance').innerText = currentEce.toLocaleString(undefined, {minimumFractionDigits: 2});
+                status.innerText = "SUCCESS! +500 $ECE ADDED.";
+                status.style.color = "#00ff00";
                 
-                log.innerText = "SUCCESS: +500.00 $ECE ADDED TO VAULT!";
-                log.style.color = "#22c55e";
-                
-                // Feedback
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
+                if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             }).catch((err) => {
-                // ERROR OR SKIP
-                log.innerText = "NOTICE: MINTING ABORTED. AD MUST BE VIEWED FULLY.";
-                log.style.color = "#ef4444";
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                console.log("Adsgram Error:", err);
+                // FAILED: No ad found or user skipped
+                status.innerText = "ERROR: NO VIDEO AVAILABLE OR SKIPPED.";
+                status.style.color = "#ff4444";
+                console.error("Adsgram Error:", err);
             });
         };
     </script>
