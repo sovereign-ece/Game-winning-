@@ -3,59 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Efikcoin Eternal | Live Rewards</title>
+    <title>EFIKCOIN ETERNAL | LIVE MINTING</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        .logo { color: #d4af37; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; }
-        #balance { font-size: 3rem; color: #d4af37; font-weight: bold; text-shadow: 0 0 10px rgba(212,175,55,0.5); }
-        /* CENTRAL COIN - FIXED */
-        .coin-btn { background: none; border: none; cursor: pointer; transition: 0.1s; margin: 20px 0; outline: none; }
-        .coin-btn:active { transform: scale(0.9); }
-        .coin-btn img { width: 180px; height: 180px; filter: drop-shadow(0 0 15px #d4af37); }
-        .status-box { background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px; width: 90%; font-size: 0.75rem; color: #00f2ff; }
+        body { background: #000; color: #fff; font-family: 'Orbitron', sans-serif; text-align: center; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .logo { color: #d4af37; font-size: 1.4rem; font-weight: 900; letter-spacing: 3px; margin-bottom: 5px; }
+        .sub-logo { font-size: 0.6rem; color: #555; letter-spacing: 5px; margin-bottom: 30px; }
+        
+        /* THE VAULT STATS */
+        #balance { font-size: 3.5rem; color: #d4af37; font-weight: 900; text-shadow: 0 0 20px rgba(212,175,55,0.4); margin: 10px 0; }
+        .label { font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px; }
+
+        /* THE CLICKABLE COIN */
+        .coin-trigger { background: none; border: none; cursor: pointer; transition: transform 0.1s; margin: 30px 0; position: relative; }
+        .coin-trigger:active { transform: scale(0.9); }
+        .coin-trigger img { width: 220px; height: 220px; filter: drop-shadow(0 0 30px rgba(212,175,55,0.3)); }
+        
+        /* STATUS LOG */
+        .status-bar { background: rgba(20,20,20,0.9); border: 1px solid #d4af3733; padding: 12px; border-radius: 12px; width: 90%; max-width: 400px; font-size: 0.7rem; color: #00f2ff; font-family: monospace; }
+        
+        .pulse { animation: pulse-glow 2s infinite; }
+        @keyframes pulse-glow { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
     </style>
 </head>
 <body>
 
     <div class="logo">EFIKCOIN ETERNAL</div>
-    <div style="font-size: 0.7rem; opacity: 0.5;">LIVE REWARD SYSTEM</div>
+    <div class="sub-logo">SOVEREIGN ECOSYSTEM</div>
 
     <div id="balance">0.00</div>
-    <div style="font-size: 0.8rem; margin-bottom: 20px;">TOTAL $ECE MINTED</div>
+    <div class="label">TOTAL $ECE IN VAULT</div>
 
-    <button class="coin-btn" id="tapMint">
-        <img src="https://cdn-icons-png.flaticon.com/512/2585/2585244.png" alt="ECE Coin">
+    <button class="coin-trigger" id="mintBtn">
+        <img src="https://cdn-icons-png.flaticon.com/512/2585/2585244.png" alt="ECE COIN">
     </button>
 
-    <div class="status-box" id="msg">SYSTEM READY. TAP COIN TO START MINTING.</div>
+    <div class="status-bar" id="log">SYSTEM: READY TO MINT...</div>
+    <p style="font-size: 0.6rem; margin-top: 15px; opacity: 0.4;">MINTING AUTHENTICATED BY ADSGRAM BLOCK 29505</p>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // UPDATED WITH YOUR REAL ID FROM SCREENSHOT
-        const AdController = window.Adsgram.init({ blockId: "28286" });
+        // 1. INITIALIZE ADSGRAM WITH YOUR NEW BLOCK ID
+        const AdController = window.Adsgram.init({ blockId: "29505" });
 
-        let bal = parseFloat(localStorage.getItem('ece_bal')) || 0;
-        document.getElementById('balance').innerText = bal.toLocaleString();
+        // 2. PERSISTENCE LAYER (Saves rewards to phone)
+        let currentEce = parseFloat(localStorage.getItem('ece_live_vault')) || 0;
+        document.getElementById('balance').innerText = currentEce.toLocaleString(undefined, {minimumFractionDigits: 2});
 
-        document.getElementById('tapMint').onclick = () => {
-            const log = document.getElementById('msg');
-            log.innerText = "OPENING SECURE AD CHANNEL...";
+        // 3. MINING LOGIC
+        document.getElementById('mintBtn').onclick = () => {
+            const log = document.getElementById('log');
+            log.innerText = "OPENING SECURE MINTING CHANNEL...";
+            log.style.color = "#00f2ff";
 
+            // Trigger the Rewarded Video
             AdController.show().then((result) => {
-                // REAL WIN LOGIC
-                bal += 500;
-                localStorage.setItem('ece_bal', bal);
-                document.getElementById('balance').innerText = bal.toLocaleString();
-                log.innerText = "SUCCESS: +500 $ECE MINTED!";
-                log.style.color = "#00ff00";
-                tg.HapticFeedback.notificationOccurred('success');
+                // WINNING REWARD
+                const reward = 500.00;
+                currentEce += reward;
+                
+                // Save and Update UI
+                localStorage.setItem('ece_live_vault', currentEce);
+                document.getElementById('balance').innerText = currentEce.toLocaleString(undefined, {minimumFractionDigits: 2});
+                
+                log.innerText = "SUCCESS: +500.00 $ECE ADDED TO VAULT!";
+                log.style.color = "#22c55e";
+                
+                // Feedback
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+
             }).catch((err) => {
-                log.innerText = "AD SKIPPED OR NETWORK ERROR. PLEASE TRY AGAIN.";
-                log.style.color = "#ff4444";
+                // ERROR OR SKIP
+                log.innerText = "NOTICE: MINTING ABORTED. AD MUST BE VIEWED FULLY.";
+                log.style.color = "#ef4444";
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                console.log("Adsgram Error:", err);
             });
         };
     </script>
