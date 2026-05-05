@@ -3,127 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EFIKCOIN ETERNAL - Live Reward Engine</title>
+    <title>Efikcoin Eternal | Live Rewards</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://sad.adsgram.ai/js/adsgram-ad-sdk.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
-        /* [MAINTAINING YOUR ORIGINAL STRUCTURE & DESIGN] */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --gold: #d4af37; --gold-light: #f0d878; --black: #0a0a0a; --green: #22c55e; }
-        body { font-family: 'Inter', sans-serif; background: var(--black); color: #fff; min-height: 100vh; overflow: hidden; }
-
-        /* THE HEADER */
-        .header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(10,10,10,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(212,175,55,0.1); padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .logo-text { font-family: 'Orbitron'; font-size: 1.1rem; background: linear-gradient(135deg, var(--gold-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* THE CORE GAME UI */
-        .main-container { padding-top: 80px; text-align: center; }
-        .hero-title { font-family: 'Orbitron'; font-size: 1.8rem; font-weight: 900; color: var(--gold); margin-bottom: 5px; }
-        .hero-subtitle { font-size: 0.6rem; color: rgba(255,255,255,0.4); letter-spacing: 4px; margin-bottom: 20px; }
-
-        /* THE CENTRAL MINING COIN */
-        .coin-section { position: relative; width: 220px; height: 220px; margin: 0 auto; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .coin-glow { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%); animation: pulse 2s infinite; }
-        .coin-inner { width: 180px; height: 180px; border-radius: 50%; border: 4px solid var(--gold); background: #1a1504; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.1s; z-index: 10; box-shadow: 0 0 30px rgba(212,175,55,0.2); }
-        .coin-inner:active { transform: scale(0.9); }
-        .coin-infinity { font-size: 4rem; color: var(--gold); line-height: 1; margin-top: -10px; }
-        .coin-symbol { font-family: 'Orbitron'; font-size: 0.8rem; color: var(--gold); }
-
-        /* STATS & REWARDS */
-        .wallet-card { background: rgba(20,20,20,0.95); border: 1px solid rgba(212,175,55,0.2); border-radius: 15px; width: 90%; margin: 20px auto; padding: 20px; text-align: left; }
-        .wallet-label { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .wallet-balance { font-family: 'Orbitron'; font-size: 2.2rem; color: var(--gold); margin: 5px 0; }
-        
-        /* LOG / STATUS */
-        .status-bar { width: 90%; margin: 10px auto; padding: 10px; background: #000; border: 1px solid #333; border-radius: 8px; font-family: monospace; font-size: 0.7rem; color: var(--green); }
-
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(1); opacity: 0.5; } }
+        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .logo { color: #d4af37; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; }
+        #balance { font-size: 3rem; color: #d4af37; font-weight: bold; text-shadow: 0 0 10px rgba(212,175,55,0.5); }
+        /* CENTRAL COIN - FIXED */
+        .coin-btn { background: none; border: none; cursor: pointer; transition: 0.1s; margin: 20px 0; outline: none; }
+        .coin-btn:active { transform: scale(0.9); }
+        .coin-btn img { width: 180px; height: 180px; filter: drop-shadow(0 0 15px #d4af37); }
+        .status-box { background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px; width: 90%; font-size: 0.75rem; color: #00f2ff; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div>
-            <div class="logo-text">EFIKCOIN ETERNAL</div>
-            <div style="font-size: 0.6rem; color: #666;">SOVEREIGN FINANCE</div>
-        </div>
-        <div id="userBadge" style="font-size: 0.7rem; color: var(--gold); border: 1px solid var(--gold); padding: 5px 10px; border-radius: 20px;">
-            USER: <span id="username">PLAYER</span>
-        </div>
-    </div>
+    <div class="logo">EFIKCOIN ETERNAL</div>
+    <div style="font-size: 0.7rem; opacity: 0.5;">LIVE REWARD SYSTEM</div>
 
-    <div class="main-container">
-        <h1 class="hero-title">WIN REWARDS</h1>
-        <p class="hero-subtitle">MINTING LIVE ON MAINNET</p>
+    <div id="balance">0.00</div>
+    <div style="font-size: 0.8rem; margin-bottom: 20px;">TOTAL $ECE MINTED</div>
 
-        <div class="coin-section" id="mintAction">
-            <div class="coin-glow"></div>
-            <div class="coin-inner">
-                <div class="coin-symbol">ECE</div>
-                <div class="coin-infinity">∞</div>
-                <div style="font-size: 0.7rem; color: var(--gold); font-weight: bold;">TAP TO MINT</div>
-            </div>
-        </div>
+    <button class="coin-btn" id="tapMint">
+        <img src="https://cdn-icons-png.flaticon.com/512/2585/2585244.png" alt="ECE Coin">
+    </button>
 
-        <div class="wallet-card">
-            <div class="wallet-label">Your Secure Wallet</div>
-            <div class="wallet-balance" id="bal">0.00</div>
-            <div style="font-size: 0.6rem; color: #555;">$ECE (ETERNAL COIN ECOSYSTEM)</div>
-        </div>
-
-        <div class="status-bar" id="log">SYSTEM: STANDBY - READY TO MINT...</div>
-        
-        <div style="margin-top: 10px; opacity: 0.5; font-size: 0.6rem;">Powered by Adsgram Integration</div>
-    </div>
+    <div class="status-box" id="msg">SYSTEM READY. TAP COIN TO START MINTING.</div>
 
     <script>
-        // 1. TELEGRAM INITIALIZATION
         const tg = window.Telegram.WebApp;
-        tg.ready();
         tg.expand();
 
-        // 2. USER PROFILE SETUP
-        const username = tg.initDataUnsafe?.user?.first_name || "MEMBER";
-        document.getElementById('username').innerText = username.toUpperCase();
+        // UPDATED WITH YOUR REAL ID FROM SCREENSHOT
+        const AdController = window.Adsgram.init({ blockId: "28286" });
 
-        // 3. ADSGRAM SETUP (USING YOUR BLOCK ID)
-        const AdController = window.Adsgram.init({ blockId: "29226" });
+        let bal = parseFloat(localStorage.getItem('ece_bal')) || 0;
+        document.getElementById('balance').innerText = bal.toLocaleString();
 
-        // 4. PERSISTENT BALANCE LOGIC
-        let currentBal = parseFloat(localStorage.getItem('ece_vault_v2')) || 0;
-        document.getElementById('bal').innerText = currentBal.toLocaleString(undefined, {minimumFractionDigits: 2});
+        document.getElementById('tapMint').onclick = () => {
+            const log = document.getElementById('msg');
+            log.innerText = "OPENING SECURE AD CHANNEL...";
 
-        // 5. THE WINNING FUNCTION (TAP TO MINT)
-        document.getElementById('mintAction').addEventListener('click', () => {
-            const log = document.getElementById('log');
-            log.innerText = "CONNECTING TO MINING CLOUD... PLEASE WATCH AD TO VERIFY BLOCK.";
-            log.style.color = "#00f2ff";
-
-            // Trigger the Reward Ad
             AdController.show().then((result) => {
-                // SUCCESS: User finished the ad
-                const winAmount = 500; // Reward per win
-                currentBal += winAmount;
-                localStorage.setItem('ece_vault_v2', currentBal);
-                
-                // Update UI
-                document.getElementById('bal').innerText = currentBal.toLocaleString(undefined, {minimumFractionDigits: 2});
-                log.innerText = "BLOCK VERIFIED! WIN: +500.00 $ECE ADDED TO WALLET.";
-                log.style.color = "#22c55e";
-                
-                // Feedback
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-
+                // REAL WIN LOGIC
+                bal += 500;
+                localStorage.setItem('ece_bal', bal);
+                document.getElementById('balance').innerText = bal.toLocaleString();
+                log.innerText = "SUCCESS: +500 $ECE MINTED!";
+                log.style.color = "#00ff00";
+                tg.HapticFeedback.notificationOccurred('success');
             }).catch((err) => {
-                // FAILED/SKIPPED
-                log.innerText = "CORE ERROR: MINTING ABORTED. AD MUST BE VIEWED FULLY.";
-                log.style.color = "#ef4444";
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                log.innerText = "AD SKIPPED OR NETWORK ERROR. PLEASE TRY AGAIN.";
+                log.style.color = "#ff4444";
             });
-        });
+        };
     </script>
 </body>
 </html>
